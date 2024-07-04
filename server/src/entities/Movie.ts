@@ -1,6 +1,7 @@
 import "reflect-metadata"
-import { Type } from "class-transformer";
-import { ArrayMinSize, IsArray, IsInt, IsNotEmpty, Max, Min } from "class-validator";
+import { plainToClass, Type } from "class-transformer";
+import { ArrayMinSize, IsArray, IsInt, IsNotEmpty, Max, Min, validate } from "class-validator";
+import { skip } from "node:test";
 
 
 export class Movie {
@@ -44,4 +45,37 @@ export class Movie {
 
   @Type(() => String)
   public poster?: string;
+
+  /**
+   * 验证当前电影对象
+   */
+  public async validateThis(skipMissingProperties = false): Promise<string[]> {
+    const errors = await validate(this, {
+      skipMissingProperties,
+    });
+    const temp = errors.map(e => {
+      if (e.constraints) {
+        return Object.values(e.constraints)
+      }
+      return []
+    });
+
+    const result: string[] = [];
+    temp.forEach(t => {
+      result.push(...t)
+    })
+    return result
+  }
+
+  /**
+   * 将一个平面对象转换为Movie类的对象
+   * @param plainObject 平面对象
+   * @returns 
+   */
+  public static transform(plainObject: object): Movie {
+    if (plainObject instanceof Movie) {
+      return plainObject
+    }
+    return plainToClass(Movie, plainObject)
+  }
 }
