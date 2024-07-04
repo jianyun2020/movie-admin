@@ -1,10 +1,10 @@
 import "reflect-metadata"
-import { plainToClass, Type } from "class-transformer";
-import { ArrayMinSize, IsArray, IsInt, IsNotEmpty, Max, Min, validate } from "class-validator";
-import { skip } from "node:test";
+import { Type } from "class-transformer";
+import { ArrayMinSize, IsArray, IsInt, IsNotEmpty, Max, Min } from "class-validator";
+import { BaseEntities } from "./BaseEntities";
 
 
-export class Movie {
+export class Movie extends BaseEntities {
   @IsNotEmpty({message: "电影名称不能为空"})
   @Type(() => String)
   public name: string;
@@ -47,35 +47,11 @@ export class Movie {
   public poster?: string;
 
   /**
-   * 验证当前电影对象
-   */
-  public async validateThis(skipMissingProperties = false): Promise<string[]> {
-    const errors = await validate(this, {
-      skipMissingProperties,
-    });
-    const temp = errors.map(e => {
-      if (e.constraints) {
-        return Object.values(e.constraints)
-      }
-      return []
-    });
-
-    const result: string[] = [];
-    temp.forEach(t => {
-      result.push(...t)
-    })
-    return result
-  }
-
-  /**
    * 将一个平面对象转换为Movie类的对象
    * @param plainObject 平面对象
    * @returns 
    */
   public static transform(plainObject: object): Movie {
-    if (plainObject instanceof Movie) {
-      return plainObject
-    }
-    return plainToClass(Movie, plainObject)
+    return super.baseTransform(Movie, plainObject)
   }
 }

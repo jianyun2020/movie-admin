@@ -3,10 +3,20 @@ import { MovieModel } from "./db"
 import { Movie } from "./entities/Movie"
 import { MovieService } from "./services/MovieService"
 
-const m: any = {
-  name: '金刚狼2',
+const condi: any = {
+  page: 1,
+  limit: 2,
+  key: 10,
+
 }
 
-MovieService.findById('6686b53b9fff250b68e83a10').then(res => {
-  console.log("res", res)
+MovieService.find(condi).then(res => {
+  if (res.errors.length > 0) {
+    console.log(res.errors);
+    
+  } else {
+    res.data.forEach(m => console.log(m.name));
+    console.log('count: ', res.count);
+    
+  }
 })

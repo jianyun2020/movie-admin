@@ -1,6 +1,9 @@
+import { count } from "console";
 import { MovieModel } from "../db";
 import { IMovie } from "../db/MovieSchema";
+import { ISearchResult } from "../entities/CommonTypes";
 import { Movie } from "../entities/Movie";
+import { SearchCondition } from "../entities/SearchCondition";
 
 export class MovieService {
   public static async add(movie: Movie): Promise<IMovie | string[]> {
@@ -24,8 +27,8 @@ export class MovieService {
       return errors
     }
     // 3. 修改数据库
-     await MovieModel.updateOne({ _id: id }, movie)
-     return errors
+    await MovieModel.updateOne({ _id: id }, movie)
+    return errors
   }
 
   public static async delete(id: string): Promise<void> {
@@ -34,5 +37,32 @@ export class MovieService {
 
   public static async findById(id: string): Promise<IMovie | null> {
     return await MovieModel.findById(id)
+  }
+
+  public static async find(condition: SearchCondition): Promise<ISearchResult<IMovie>> {
+        // 1. 转换类型
+        const conObj = SearchCondition.transform(condition);
+        // 2. 数据验证
+        const errors = await conObj.validateThis(true);
+        if (errors.length > 0) {
+          return {
+            count: 0,
+            data: [],
+            errors
+          }
+        }
+        // 查询
+        const movies = await MovieModel.find({
+          name: { $regex: new RegExp(conObj.key)}
+        }).skip((conObj.page - 1) * conObj.limit).limit(conObj.limit);
+
+        const count = await MovieModel.countDocuments({
+          name: { $regex: new RegExp(conObj.key) }
+        })
+        return {
+          count,
+          data: movies,
+          errors: []
+        }
   }
 }
