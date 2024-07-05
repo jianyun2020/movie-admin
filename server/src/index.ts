@@ -1,22 +1,13 @@
 import "reflect-metadata"
-import { MovieModel } from "./db"
-import { Movie } from "./entities/Movie"
-import { MovieService } from "./services/MovieService"
+import Express from "express";
+import MovieRouter from './routes/MovieRoute'
 
-const condi: any = {
-  page: 1,
-  limit: 2,
-  key: 10,
+const app = Express();
 
-}
+app.use(Express.json())
 
-MovieService.find(condi).then(res => {
-  if (res.errors.length > 0) {
-    console.log(res.errors);
-    
-  } else {
-    res.data.forEach(m => console.log(m.name));
-    console.log('count: ', res.count);
-    
-  }
+app.use('/api/movie', MovieRouter)
+
+app.listen(3000, () => {
+    console.log('Server is running on port 3000')
 })
