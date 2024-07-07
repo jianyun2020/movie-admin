@@ -39,8 +39,8 @@ function deelteAction (id: string): DeleteAction {
   }
 }
 
-export type MovieActions = SaveMoviesAction | SetLoadingAction | SetConditionAction | DeleteAction;
 
+export type MovieActions = SaveMoviesAction | SetLoadingAction | SetConditionAction | DeleteAction;
 export type AsyncAction = ThunkAction<Promise<void>, IRootState, any, MovieActions>
 
 // 根据条件从服务器后去电影的数据

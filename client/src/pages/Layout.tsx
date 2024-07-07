@@ -14,12 +14,15 @@ const _Layout = () => {
       <Header style={{padding: "0 20px"}}>
         <NavLink to={"/"}>超级电影后台管理系统</NavLink>
       </Header>
-      <Menu theme="dark">
-        <Menu.Item><NavLink to={"/"}>首页</NavLink></Menu.Item>
-        <Menu.Item><NavLink to={"/movie"}>电影列表</NavLink></Menu.Item>
-        <Menu.Item><NavLink to={"/movie/add"}>添加电影</NavLink></Menu.Item>
-        <Menu.Item><NavLink to={"/movie/edit/004"}>修改电影</NavLink></Menu.Item>
-      </Menu>
+      <Menu 
+        theme="dark"
+        items={[
+          {key: '1', label: <NavLink to={"/"}>首页</NavLink>},
+          {key: '2', label: <NavLink to={"/movie"}>电影列表</NavLink>},
+          {key: '3', label: <NavLink to={"/movie/add"}>添加电影</NavLink>},
+          {key: '4', label: <NavLink to={"/movie/edit/004"}>修改电影</NavLink>},
+        ]}
+      />
     </Sider>
     <Layout>
       <Header></Header>
