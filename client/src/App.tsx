@@ -1,11 +1,12 @@
-import React from 'react';
-import './App.css';
+import {BrowserRouter} from 'react-router-dom'
+
+import Layout from './pages/Layout';
 
 function App() {
   return (
-    <div className="App">
-      111
-    </div>
+    <BrowserRouter >
+      <Layout />
+    </BrowserRouter >
   );
 }
 
